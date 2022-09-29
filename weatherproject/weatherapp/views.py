@@ -1,7 +1,20 @@
 from django.shortcuts import render
-
+import requests
+from decouple import config
 # Create your views here.
 def index(request):
-   str = "sync testing"
+    api_key = config("API_KEY")
     welcome_message = "Hello, welcome to Weather App"
-    return render(request, 'weatherapp/index.html', {'welcome_message':welcome_message} )
+    URL = 'https://api.openweathermap.org/data/2.5/weather'
+    PARAMS = {'q': 'houston' + ',' + 'USA', 'appid': api_key}
+
+    #send req to API
+    r = requests.get(url=URL,params=PARAMS)
+    #fetch respose
+    response = r.json()
+    #print response object to terminal
+    print("resp:", response)
+    description= response['weather'][0]['description']
+    icon = response['weather'][0]['icon']
+    temperature = response['main']["temp"]
+    return render(request, 'weatherapp/index.html', {'welcome_message':welcome_message})
