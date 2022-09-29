@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import requests
 from decouple import config
+import datetime
 # Create your views here.
 def index(request):
     api_key = config("API_KEY")
@@ -17,4 +18,5 @@ def index(request):
     description= response['weather'][0]['description']
     icon = response['weather'][0]['icon']
     temperature = response['main']["temp"]
-    return render(request, 'weatherapp/index.html', {'welcome_message':welcome_message})
+    day = datetime.date.today()
+    return render(request, 'weatherapp/index.html', {'welcome_message':welcome_message, 'description': description, 'icon':icon, 'temperature':temperature, 'day': day})
